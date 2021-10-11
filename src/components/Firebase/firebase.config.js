@@ -1,5 +1,5 @@
 const firebaseConfig = {
-// add firebaseConfig
+// add firebaseConfig;
 };
 
 

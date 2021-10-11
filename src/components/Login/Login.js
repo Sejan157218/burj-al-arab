@@ -1,5 +1,6 @@
 
-import React, { useContext } from 'react';
+import { Email } from '@material-ui/icons';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router';
 import useAuth from '../hooks/useAuth';
@@ -7,10 +8,12 @@ import './Login.css'
 
 
 const Login = () => {
-
-    const {user,handlerGoogleSignIn} =useAuth();
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = data => console.log(data);
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('');
+    const {user,handlerGoogleSignIn,handlerToSubmit,error,islogin,setLogin,} =useAuth();
+    const onLogin = () => {
+        handlerToSubmit(email,password);
+    }
     const history = useHistory();
     const location  = useLocation();
 
@@ -22,20 +25,30 @@ const Login = () => {
             history.push(redirect_ui)
         });
     }
+    const handlerEmailChange=e=>{
+        setEmail(e.target.value);
+    }
+    const handlerPassordChange=e=>{
+        setPassword(e.target.value);
+    }
     return (
         <div className="text-center">
             <h1 className="pb-3">Login</h1>
             <div>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <input defaultValue="test" {...register("example")} />
-                    <br/>
-                    <input {...register("exampleRequired", { required: true })} />
-                    <br/>
-                    {errors.exampleRequired && <span>This field is required</span>}
-                    <input type="submit" />
-                </form>
+            <div className="input-icons">
+                    <i className="fa fa-user icon"></i>
+                    <input onChange={handlerEmailChange} className="input-field w-100 h-50 mb-2" type="text" />
+                    <br />
+                    <i className="fas fa-lock icon"></i>
+                    <input onChange={handlerPassordChange} className="input-field w-100 h-50" type="password" name="password" placeholder="Password" />
+                </div>
+                    <p onClick={()=>setLogin(true)}>Already Register</p>
                 <p>Forget Password ?</p>
-                <button className="w-100 button-login fb-bg">Login</button>
+                <p>{error}</p>
+                {islogin ?
+                    <button onClick={onLogin} className="w-100 button-login fb-bg">Login</button>
+                    : <button onClick={onLogin}  className="w-100 button-login fb-bg">register</button>
+                }
                 <p className="pt-3">Or Login With</p>
                 <div>
                     <button onClick={handlerGoogleLoin} className="button-login me-3 google-bg"> <i class="fab fa-google me-2"></i>Google</button>
